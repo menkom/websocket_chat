@@ -1,0 +1,31 @@
+plugins {
+    id 'org.springframework.boot' version "${springVersion}"
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+group = 'info.mastera'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.11
+targetCompatibility = 1.11
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.springframework.boot:spring-boot-starter-websocket:${springVersion}"
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    // Можно использовать данный импорт, тогда можно подтягивать библиотеки websocket.js и sockjs.js из программы,
+    // а не из сторонних источников.
+//    implementation 'org.webjars:stomp-websocket:2.3.4'
+//    implementation 'org.webjars:sockjs-client:1.5.1'
+    implementation "com.hazelcast:hazelcast:${hazelcastVersion}"
+}

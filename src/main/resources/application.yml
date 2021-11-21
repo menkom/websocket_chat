@@ -1,0 +1,4 @@
+server:
+  port: ${SERVER_PORT:8082}
+mastera:
+  hazelcast.group-name: ${HAZELCAST_GROUP_NAME:websocket-chat-group}
