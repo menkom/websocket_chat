@@ -4,7 +4,6 @@ import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -41,11 +40,11 @@ public class UserSessionService {
                 );
         log.info("Users connected: " + getMap().size());
     }
-
-    public void removeUser(String username) {
-        getMap().delete(username);
-        log.info("Users connected: " + getMap().size());
-    }
+//
+//    public void removeUser(String username) {
+//        getMap().delete(username);
+//        log.info("Users connected: " + getMap().size());
+//    }
 
     public Set<String> getSessions(@NonNull String username) {
         return Optional.ofNullable(getMap().get(username))

@@ -38,15 +38,13 @@ function onConnected() {
     chatPage.classList.remove('hidden');
     // Функция stompClient.subscribe() принимает аргументом callback-функцию,
     // которая вызывается каждый раз, когда в тему приходит сообщение.
-    // Subscribe to the Public Topic
-    stompClient.subscribe('/topic/public', onMessageReceived);
     stompClient.subscribe('/user/' + sessionId + '/message', onMessageReceived);
     headerLabel.textContent = 'Chat user: ' + username;
 
     // Tell your username to the server
-    stompClient.send("/app/chat.addUser",
+    stompClient.send("/app/newConnection",
         {},
-        JSON.stringify({sender: username, type: 'JOIN'})
+        JSON.stringify({username: username})
     )
     connectingElement.classList.add('hidden');
 }
@@ -58,76 +56,12 @@ function onError(error) {
 }
 
 
-function sendMessage(event) {
-    var messageContent = messageInput.value.trim();
-
-    if (messageContent && stompClient) {
-        var chatMessage = {
-            sender: username,
-            content: messageInput.value,
-            type: 'CHAT'
-        };
-
-        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
-        messageInput.value = '';
-    }
-    event.preventDefault();
-}
-
-
 function onMessageReceived(payload) {
     console.log('onMessageReceived', payload);
-    var message = JSON.parse(payload.body);
-
-    var messageElement = document.createElement('li');
-
-    if (message.type === 'JOIN') {
-        messageElement.classList.add('event-message');
-        message.content = message.sender + ' joined!';
-    } else if (message.type === 'LEAVE') {
-        messageElement.classList.add('event-message');
-        message.content = message.sender + ' left!';
-    } else if (message.type === 'COMMAND') {
-        if (message.sender === sessionId) {
-            disconnect();
-        }
-        messageElement.classList.add('event-message');
-        message.content = 'Command "' + message.content + '" for ' + message.sender + ' send!';
-    } else {
-        messageElement.classList.add('chat-message');
-
-        const avatarElement = document.createElement('i');
-        const avatarText = document.createTextNode(message.sender[0]);
-        avatarElement.appendChild(avatarText);
-        avatarElement.style['background-color'] = getAvatarColor(message.sender);
-
-        messageElement.appendChild(avatarElement);
-
-        var usernameElement = document.createElement('span');
-        var usernameText = document.createTextNode(message.sender);
-        usernameElement.appendChild(usernameText);
-        messageElement.appendChild(usernameElement);
+    const message = JSON.parse(payload.body);
+    if (message.type === 'LOGOUT') {
+        disconnect();
     }
-
-    var textElement = document.createElement('p');
-    var messageText = document.createTextNode(message.content);
-    textElement.appendChild(messageText);
-
-    messageElement.appendChild(textElement);
-
-    messageArea.appendChild(messageElement);
-    messageArea.scrollTop = messageArea.scrollHeight;
-}
-
-
-function getAvatarColor(messageSender) {
-    var hash = 0;
-    for (var i = 0; i < messageSender.length; i++) {
-        hash = 31 * hash + messageSender.charCodeAt(i);
-    }
-
-    var index = Math.abs(hash % colors.length);
-    return colors[index];
 }
 
 function disconnect() {
@@ -142,5 +76,4 @@ function disconnect() {
 }
 
 usernameForm.addEventListener('submit', connect, true)
-messageForm.addEventListener('submit', sendMessage, true)
 disconnectButton.onclick = disconnect;

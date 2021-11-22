@@ -12,9 +12,7 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ChatMessage {
+public class CommandMessage {
 
-    MessageType type;
-    String content;
-    String sender;
+    CommandType type;
 }

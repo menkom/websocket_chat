@@ -1,7 +1,5 @@
 package info.mastera.websocketchat.controller;
 
-import info.mastera.websocketchat.model.ChatMessage;
-import info.mastera.websocketchat.model.MessageType;
 import info.mastera.websocketchat.service.UserSessionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,11 +62,11 @@ public class WebSocketEventListener {
 
             userSessionService.removeSessionId(username, event.getSessionId());
 
-            ChatMessage chatMessage = new ChatMessage();
-            chatMessage.setType(MessageType.LEAVE);
-            chatMessage.setSender(username);
-
-            messagingTemplate.convertAndSend("/topic/public", chatMessage);
+//            ChatMessage chatMessage = new ChatMessage();
+//            chatMessage.setType(MessageType.LEAVE);
+//            chatMessage.setSender(username);
+//
+//            messagingTemplate.convertAndSend("/topic/public", chatMessage);
         }
     }
 }
